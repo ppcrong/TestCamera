@@ -11,6 +11,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.init_ui()
 
+        self.image = None
         self.timer_camera = QtCore.QTimer()
         self.cap = cv2.VideoCapture()
         self.CAM_NUM = 0
@@ -30,8 +31,8 @@ class MainWindow(QtWidgets.QMainWindow):
         flag, self.image = self.cap.read()
         show = cv2.resize(self.image, (440, 330))
         show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
-        showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
-        self.ui.label_cam_preview.setPixmap(QtGui.QPixmap.fromImage(showImage))
+        show_image = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
+        self.ui.label_cam_preview.setPixmap(QtGui.QPixmap.fromImage(show_image))
 
     def clicked_camera_open(self):
         if not self.timer_camera.isActive():
@@ -62,7 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # msg = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Warning, u"Close", u"Close!")
         #
         # msg.addButton(ok, QtWidgets.QMessageBox.ActionRole)
-        # msg.addButton(cacel, QtWidgets.QMessageBox.RejectRole)
+        # msg.addButton(cancel, QtWidgets.QMessageBox.RejectRole)
         # ok.setText(u'OK')
         # cacel.setText(u'Cancel')
         # if msg.exec_() == QtWidgets.QMessageBox.RejectRole:
