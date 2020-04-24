@@ -2,6 +2,7 @@ import sys
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication
 
 from res.ui import Ui_MainWindow
 
@@ -41,21 +42,18 @@ class MainWindow(QtWidgets.QMainWindow):
                                                     buttons=QtWidgets.QMessageBox.Ok,
                                                     defaultButton=QtWidgets.QMessageBox.Ok)
             else:
-                print('start preview---')
+                print('+++start preview+++')
                 self.timer_camera.start(30)
-                self.setButtonEnable(False)
         else:
             self.clicked_camera_close()
-            self.setButtonEnable(True)
 
     def clicked_camera_close(self):
         if self.timer_camera.isActive():
-            print('stop preview---')
+            print('---stop preview---')
             self.timer_camera.stop()
         self.open_camera(False)
 
         self.ui.label_cam_preview.clear()
-        self.setButtonEnable(True)
 
     def closeEvent(self, event):
         self.clicked_camera_close()
@@ -78,25 +76,26 @@ class MainWindow(QtWidgets.QMainWindow):
         #     event.accept()
 
     def open_camera(self, b):
+        self.set_button_enable(not b)
         flag = True
         if b:
             if not self.cap.isOpened():
-                print('open cam+++')
+                print('+++open cam+++')
                 flag = self.cap.open(self.CAM_NUM)
-                print('open cam---')
+                print('---open cam---')
             else:
                 print('cam is already opened')
         else:
             if self.cap.isOpened():
-                print('close cam+++')
+                print('+++close cam+++')
                 self.cap.release()
-                print('close cam---')
+                print('---close cam---')
             else:
                 print('cam is already closed')
 
         return flag
 
-    def setButtonEnable(self, b):
+    def set_button_enable(self, b):
         self.ui.btn_cam_open.setEnabled(b)
         self.ui.btn_cam_close.setEnabled(not b)
 
