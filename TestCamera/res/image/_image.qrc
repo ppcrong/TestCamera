@@ -1,0 +1,7 @@
+<RCC>
+  <qresource>
+    <file>ic_camera.png</file>
+    <file>ic_camera_close.png</file>
+    <file>ic_camera_open.png</file>
+  </qresource>
+</RCC>
