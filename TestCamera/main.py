@@ -13,7 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.image = None
         self.timer_camera = QtCore.QTimer()
-        self.cap = cv2.VideoCapture()
+        self.cam = cv2.VideoCapture()
         self.CAM_NUM = 0
 
         self.init_slot()
@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_cam_close.clicked.connect(self.clicked_camera_close)
 
     def camera_start_preview(self):
-        flag, self.image = self.cap.read()
+        flag, self.image = self.cam.read()
         show = cv2.resize(self.image, (440, 330))
         show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
         show_image = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
@@ -79,16 +79,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_button_enable(not b)
         flag = True
         if b:
-            if not self.cap.isOpened():
+            if not self.cam.isOpened():
                 print('+++open cam+++')
-                flag = self.cap.open(self.CAM_NUM)
+                flag = self.cam.open(self.CAM_NUM)
                 print('---open cam---')
             else:
                 print('cam is already opened')
         else:
-            if self.cap.isOpened():
+            if self.cam.isOpened():
                 print('+++close cam+++')
-                self.cap.release()
+                self.cam.release()
                 print('---close cam---')
             else:
                 print('cam is already closed')
