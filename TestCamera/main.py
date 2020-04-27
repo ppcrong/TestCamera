@@ -41,6 +41,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 msg = QtWidgets.QMessageBox.warning(self, u"Warning", u"Please make sure if camera is plugged in.",
                                                     buttons=QtWidgets.QMessageBox.Ok,
                                                     defaultButton=QtWidgets.QMessageBox.Ok)
+                self.set_button_enable(True)
             else:
                 print('+++start preview+++')
                 self.timer_camera.start(30)
