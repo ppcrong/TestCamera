@@ -7,6 +7,7 @@ from res.ui import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    # region [init]
     def __init__(self):
         super(MainWindow, self).__init__()
         self.init_ui()
@@ -27,35 +28,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.btn_cam_open.clicked.connect(self.clicked_camera_open)
         self.ui.btn_cam_close.clicked.connect(self.clicked_camera_close)
 
-    def camera_start_preview(self):
-        flag, self.image = self.cam.read()
-        show = cv2.resize(self.image, (440, 330))
-        show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
-        show_image = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
-        self.ui.label_cam_preview.setPixmap(QtGui.QPixmap.fromImage(show_image))
+    # endregion [init]
 
-    def clicked_camera_open(self):
-        if not self.timer_camera.isActive():
-            flag = self.open_camera(True)
-            if not flag:
-                msg = QtWidgets.QMessageBox.warning(self, u"Warning", u"Please make sure if camera is plugged in.",
-                                                    buttons=QtWidgets.QMessageBox.Ok,
-                                                    defaultButton=QtWidgets.QMessageBox.Ok)
-                self.set_button_enable(True)
-            else:
-                print('+++start preview+++')
-                self.timer_camera.start(30)
-        else:
-            self.clicked_camera_close()
-
-    def clicked_camera_close(self):
-        if self.timer_camera.isActive():
-            print('---stop preview---')
-            self.timer_camera.stop()
-        self.open_camera(False)
-
-        self.ui.label_cam_preview.clear()
-
+    # region [override]
     def closeEvent(self, event):
         self.clicked_camera_close()
         # ok = QtWidgets.QPushButton()
@@ -75,6 +50,42 @@ class MainWindow(QtWidgets.QMainWindow):
         #     if self.timer_camera.isActive():
         #         self.timer_camera.stop()
         #     event.accept()
+
+    # endregion [override]
+
+    # region [slot]
+    def clicked_camera_open(self):
+        if not self.timer_camera.isActive():
+            flag = self.open_camera(True)
+            if not flag:
+                print('open camera fail')
+                msg = QtWidgets.QMessageBox.warning(self, u"Warning", u"Please make sure if camera is plugged in.",
+                                                    buttons=QtWidgets.QMessageBox.Ok,
+                                                    defaultButton=QtWidgets.QMessageBox.Ok)
+                self.set_button_enable(True)
+            else:
+                print('+++start preview+++')
+                self.timer_camera.start(30)
+        else:
+            self.clicked_camera_close()
+
+    def clicked_camera_close(self):
+        if self.timer_camera.isActive():
+            print('---stop preview---')
+            self.timer_camera.stop()
+        self.open_camera(False)
+
+        self.ui.label_cam_preview.clear()
+
+    # endregion [slot]
+
+    # region [camera]
+    def camera_start_preview(self):
+        flag, self.image = self.cam.read()
+        show = cv2.resize(self.image, (440, 330))
+        show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
+        show_image = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
+        self.ui.label_cam_preview.setPixmap(QtGui.QPixmap.fromImage(show_image))
 
     def open_camera(self, b):
         self.set_button_enable(not b)
@@ -96,13 +107,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         return flag
 
+    # endregion [camera]
+
+    # region [function]
     def set_button_enable(self, b):
         self.ui.btn_cam_open.setEnabled(b)
         self.ui.btn_cam_close.setEnabled(not b)
+    # endregion [function]
 
 
+# region [main]
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+# endregion [main]
